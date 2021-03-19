@@ -1,6 +1,12 @@
 import React, {useEffect, useMemo} from 'react';
 
 import {Text, StyleSheet, Image, ScrollView, Button} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+
+import {
+  add as addToFavourites,
+  remove as removeFromFavourites,
+} from '../store/favouritesSlice';
 
 import {useGet} from '../hooks/useRestful';
 import {useConfigs} from '../context/Configs';
@@ -27,9 +33,12 @@ const MovieDetails = ({id}) => {
 
   const {imageUrlBase} = useConfigs();
 
+  const favList = useSelector(state => state.favourites.value);
+  const dispatch = useDispatch();
+
   const isFavourite = useMemo(() => {
-    return Math.random() > 0.5 ? true : false;
-  }, []);
+    return data && favList.find(i => i.id === data.id);
+  }, [favList, data]);
 
   return (
     <ScrollView pagingEnabled>
@@ -55,14 +64,14 @@ const MovieDetails = ({id}) => {
             {isFavourite ? (
               <Button
                 onPress={() => {
-                  alert('remove from fav');
+                  dispatch(removeFromFavourites(data));
                 }}
                 title="Remove From Fav"
               />
             ) : (
               <Button
                 onPress={() => {
-                  alert('add to fav');
+                  dispatch(addToFavourites(data));
                 }}
                 title="Add To Fav"
               />
