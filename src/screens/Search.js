@@ -1,17 +1,34 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 
-import {ScrollView, Text, TextInput, StyleSheet} from 'react-native';
+import {
+  FlatList,
+  View,
+  RefreshControl,
+  TextInput,
+  StyleSheet,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import MovieListItem from '../component/MovieListItem';
 import {useGet} from '../hooks/useRestful';
 import useDebounce from '../hooks/useDebounce';
 
 const styles = StyleSheet.create({
+  inputBoxContainer: {
+    elevation: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  searchIcon: {
+    backgroundColor: 'white',
+    paddingHorizontal: 6,
+  },
   input: {
-    borderWidth: 1,
-    borderColor: 'black',
-    margin: 6,
-    borderRadius: 6,
+    backgroundColor: 'white',
+    flex: 1,
+    elevation: 1,
+    padding: 4,
   },
 });
 
@@ -20,29 +37,44 @@ const Search = () => {
 
   const {loading, run, data} = useGet();
 
-  const searchText = useDebounce(searchInputText, 500);
+  const searchText = useDebounce(searchInputText.trim(), 500);
 
-  useEffect(() => {
+  const onRefresh = useCallback(() => {
     run({
       url: `/search/movie?query=${searchText}`,
     });
   }, [searchText]);
 
+  useEffect(() => {
+    onRefresh();
+  }, [onRefresh]);
+
   return (
-    <ScrollView>
-      <TextInput
-        placeholder="Search..."
-        value={searchInputText}
-        onChangeText={setSearchInputText}
-        style={styles.input}
+    <View>
+      <View style={styles.inputBoxContainer}>
+        <Icon
+          style={styles.searchIcon}
+          name="ios-search"
+          size={26}
+          color="#3F51B5"
+        />
+        <TextInput
+          placeholder="Search..."
+          value={searchInputText}
+          onChangeText={setSearchInputText}
+          style={styles.input}
+          clearButtonMode="always"
+        />
+      </View>
+      <FlatList
+        data={data?.results}
+        renderItem={({item}) => <MovieListItem data={item} />}
+        keyExtractor={item => item.id}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+        }
       />
-      {loading ? (
-        <Text>Loading</Text>
-      ) : (
-        data &&
-        data.results.map(item => <MovieListItem key={item.id} data={item} />)
-      )}
-    </ScrollView>
+    </View>
   );
 };
 

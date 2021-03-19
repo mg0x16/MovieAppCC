@@ -1,33 +1,40 @@
 import React, {useEffect} from 'react';
 
-import {Text, ScrollView} from 'react-native';
+import {Text, View, FlatList, RefreshControl, StyleSheet} from 'react-native';
 
 import {useGet} from '../hooks/useRestful';
 import MovieListItem from '../component/MovieListItem';
 
-const Home = props => {
+const styles = StyleSheet.create({
+  root: {
+    paddingBottom: 32,
+  },
+  title: {
+    fontSize: 18,
+    padding: 4,
+    fontWeight: 'bold',
+  },
+});
+
+const Home = () => {
   const {loading, data, run} = useGet({
     url: '/discover/movie?sort_by=popularity.desc',
   });
 
   useEffect(() => {
     run();
-
-    // eslint-disable-next-line
   }, []);
 
   return (
-    <ScrollView pagingEnabled>
-      <Text style={{fontSize: 24, fontWeight: 'bold', marginBottom: 10}}>
-        Now In Theatres
-      </Text>
-      {loading ? (
-        <Text>Loading</Text>
-      ) : (
-        data &&
-        data.results.map(item => <MovieListItem key={item.id} data={item} />)
-      )}
-    </ScrollView>
+    <View style={styles.root}>
+      <Text style={styles.title}>Now In Theatres</Text>
+      <FlatList
+        data={data?.results}
+        renderItem={({item}) => <MovieListItem data={item} />}
+        keyExtractor={item => item.id}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={run} />}
+      />
+    </View>
   );
 };
 

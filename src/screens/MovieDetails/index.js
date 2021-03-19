@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -15,6 +15,10 @@ import {useGet} from '../../hooks/useRestful';
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+  },
+
+  indicator: {
+    marginTop: 50,
   },
 });
 
@@ -46,17 +50,27 @@ const MovieDetails = ({id}) => {
 
   return (
     <View style={styles.root}>
-      <Cover
-        translationY={translationY}
-        img={movieData && movieData.backdrop_path}
-      />
-      <Header translationY={translationY} data={movieData} />
-      <Content
-        data={movieData}
-        castData={castData?.cast}
-        translationY={translationY}
-        scrollHandler={scrollHandler}
-      />
+      {getMovieLoading || getCaseLoading ? (
+        <ActivityIndicator
+          size="large"
+          color="#3F51B5"
+          style={styles.indicator}
+        />
+      ) : (
+        <>
+          <Cover
+            translationY={translationY}
+            img={movieData && movieData.backdrop_path}
+          />
+          <Header translationY={translationY} data={movieData} />
+          <Content
+            data={movieData}
+            castData={castData?.cast}
+            translationY={translationY}
+            scrollHandler={scrollHandler}
+          />
+        </>
+      )}
     </View>
   );
 };
