@@ -46,8 +46,6 @@ const MovieDetails = ({id}) => {
     translationY.value = event.contentOffset.y;
   });
 
-  console.log(movieData);
-
   return (
     <View style={styles.root}>
       {getMovieLoading || getCaseLoading ? (
