@@ -9,9 +9,6 @@ const Favourites = () => {
 
   return (
     <ScrollView>
-      <Text style={{fontSize: 24, fontWeight: 'bold', marginBottom: 10}}>
-        Favourites
-      </Text>
       {favList.map(item => (
         <MovieListItem key={item.id} data={item} />
       ))}

@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 
-import {Text, View, ScrollView} from 'react-native';
+import {Text, ScrollView} from 'react-native';
 
 import {useGet} from '../hooks/useRestful';
 import MovieListItem from '../component/MovieListItem';
