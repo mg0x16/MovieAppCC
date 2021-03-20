@@ -37,6 +37,7 @@ const FavouriteButton = ({data}) => {
 
   return (
     <TouchableNativeFeedback
+      testID="favButton"
       onPress={isFavourite ? handleRemoveFromFav : handleAddToFav}>
       <View style={styles.root}>
         <Icon

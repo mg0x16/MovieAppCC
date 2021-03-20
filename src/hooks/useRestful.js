@@ -2,12 +2,31 @@ import {useState, useCallback} from 'react';
 
 import {Api} from '../utils/api';
 
+const handleAxiosNetworkRequest = async ({restfulType, url, config, data}) => {
+  let response;
+
+  try {
+    if (restfulType === 'get' || restfulType === 'delete') {
+      response = await Api[restfulType](url, {...config, data});
+    } else if (restfulType === 'post' || restfulType === 'put') {
+      response = await Api[restfulType](url, data, config);
+    } else {
+      throw new Error('restfulType not supported');
+    }
+  } catch (e) {
+    throw e;
+  }
+
+  return response.data;
+};
+
 const useRestful = ({
-  initialLoading,
-  initialData,
   url: initialURL,
   config: initialConfig,
+  initialData = null,
+  initialLoading = false,
   restfulType = 'get',
+  asyncRequestHandler = handleAxiosNetworkRequest,
 }) => {
   const [loading, setLoading] = useState(initialLoading);
   const [responseData, setResponseData] = useState(initialData);
@@ -22,17 +41,12 @@ const useRestful = ({
         setLoading(true);
         setError(null);
 
-        let response;
-
-        if (restfulType === 'get' || restfulType === 'delete') {
-          response = await Api[restfulType](url, {...config, data});
-        } else if (restfulType === 'post' || restfulType === 'put') {
-          response = await Api[restfulType](url, data, config);
-        } else {
-          throw new Error('restfulType not supported');
-        }
-
-        const finalData = response.data;
+        const finalData = await asyncRequestHandler({
+          data,
+          url,
+          config,
+          restfulType,
+        });
 
         setResponseData(finalData);
         setLoading(false);

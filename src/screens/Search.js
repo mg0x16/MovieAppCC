@@ -59,7 +59,7 @@ const Search = () => {
           color="#3F51B5"
         />
         <TextInput
-          placeholder="Search..."
+          placeholder="Search a movie..."
           value={searchInputText}
           onChangeText={setSearchInputText}
           style={styles.input}
