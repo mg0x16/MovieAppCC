@@ -73,6 +73,7 @@ const MovieListItem = ({data} = {}) => {
 
   return (
     <TouchableNativeFeedback
+      testID="MovieCardItem"
       onPress={() => {
         Navigation.push('MAIN_STACK', {
           component: {

@@ -88,6 +88,7 @@ const Header = ({data, translationY}) => {
   return (
     <Animated.View style={[styles.root, containerAnimatedStyles]}>
       <TouchableNativeFeedback
+        testID="MovieDetailsBackButton"
         onPress={() => {
           Navigation.pop('MAIN_STACK');
         }}>

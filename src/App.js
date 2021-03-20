@@ -48,6 +48,7 @@ export const runApp = () => {
                       options: {
                         bottomTab: {
                           icon: HomeIcon,
+                          testID: 'HomeBottomTab',
                         },
                       },
                     },
@@ -64,6 +65,7 @@ export const runApp = () => {
                       options: {
                         bottomTab: {
                           icon: SearchIcon,
+                          testID: 'SearchBottomTab',
                         },
                       },
                     },
@@ -80,6 +82,7 @@ export const runApp = () => {
                       options: {
                         bottomTab: {
                           icon: FavouritesIcon,
+                          testID: 'FavBottomTab',
                         },
                       },
                     },
